@@ -3,6 +3,7 @@
 const express = require('express')
 const resource = require('express-resource');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 // resources
 const companyResource = require('./include/resource/company-resource.js');
@@ -34,25 +35,30 @@ mongoose.connect(`mongodb://${credentials.dbuser}:${credentials.dbpassword}@${MO
 * SERVER SETUP
 */
 const app = express();
-app.use(express.static('client/'))
 
+// allow cross-origin requests (make sure before the express.static call!!)
+app.use(cors());
+
+app.use(express.static('client/'));
+
+// parse application/x-www-form-urlencoded AND application/json
 var bodyParser = require('body-parser');
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-// parse application/json
 app.use(bodyParser.json());
 
+/**
+* ROUTE SETUP
+*/
 // Main resource route setup
 app.resource('api/company', companyResource);
 app.resource('api/mention', mentionResource);
-// companyResource.setupRoutes("/company", app);
-
-// start api collection
-lookup.start(MENTION_FETCH_INTERVAL);
 
 /**
 * SERVE
 */
+// start api collection
+lookup.start(MENTION_FETCH_INTERVAL);
+
 app.listen(LISTEN_PORT, () => {
     console.log(`INFO: API server listening on port ${LISTEN_PORT}`)
 })
