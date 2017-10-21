@@ -109,7 +109,6 @@ function drawMentionsGraph() {
   container.attr("style:width", "80%");
   container.attr("style:height", "" + height + "px");
 
-  // TODO: fix these exact numbers
   let margins = {"left" : 120, "top" : 10, "right" : 90, "bottom" : 76};
   let buffer = 0;
   width = document.getElementById("mentions-graph").getBoundingClientRect().width;
@@ -165,9 +164,77 @@ function drawMentionsGraph() {
     .attr("cy", yMap);
 }
 
-// TODO: fill this in by analogy, based on the above function
-function drawSentimentsGraph() {
+function drawSentimentsGraph()
+{
   // grab the svg
-  let svg = d3.select("#sentiments-graph")
-  averageSentimentByDay = getStatsByDay();
+  let svg = d3.select("#sentiments-graph");
+
+  // grab its container
+  let container = d3.select("#sentiments-container");
+
+  // get the array of mentions by day
+  totalSentimentsByDay = getStatsByDay();
+
+  let height = 500;
+  let width;
+
+  svg.attr("style:width", "100%");
+  svg.attr("style:height", "" + height + "px");
+
+  container.attr("style:width", "80%");
+  container.attr("style:height", "" + height + "px");
+
+  let margins = {"left" : 120, "top" : 10, "right" : 90, "bottom" : 76};
+  let buffer = 0;
+  width = document.getElementById("sentiments-graph").getBoundingClientRect().width;
+
+  // get the maximum number of mentions: need this to set the y-axis
+  let maxSentiments = 0;
+  console.log(totalSentimentsByDay);
+  for (let i = 0; i < totalSentimentsByDay.length; i++)  {
+    maxSentiments = Math.max(maxSentiments, totalSentimentsByDay[i].sentiments);
+  }
+
+  // set-up x-axis and x-values
+  let xValue = function(d) { return -d.day;};
+  let xScale = d3.scale.linear().domain([-6, 0]).range([margins.left, width - margins.right]);
+  let xMap = function(d) { return xScale(xValue(d));};
+  let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"));
+
+  // set-up y-axis and y-values
+  let yValue = function(d) { return d.sentiments};
+  let yScale = d3.scale.linear().domain([maxMentions, 0]).range([margins.top, height - margins.bottom]);
+  let yMap = function(d) {return yScale(yValue(d))};
+  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
+
+  let radius = 4;
+  let color = 0x000000;
+
+  // Draw the x-axis
+  svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0, " + (height - margins.bottom) + ")")
+      .call(xAxis)
+     .append("text")
+      .attr("class", "label")
+      .attr("x", width - margins.right)
+      .attr("y", 46)
+      .style("text-anchor", "end")
+      .text("How many days ago?");
+
+  // Draw the y-axis
+  svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + (margins.left - buffer) + ", 0)")
+      .call(yAxis);
+
+  // Draw the data
+  svg.selectAll(".dot")
+    .data(totalSentimentsByDay)
+  .enter().append("circle")
+    .attr("class", "dot")
+    .attr("fill", color)
+    .attr("r", radius)
+    .attr("cx", xMap)
+    .attr("cy", yMap);
 }
