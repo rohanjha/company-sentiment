@@ -86,6 +86,7 @@ function getMentionsCompany()
 // Will be called after the above data is parsed
 ///
 
+
 function drawMentionsGraph() {
   // grab the svg
   let svg = d3.select("#mentions-graph");
@@ -150,8 +151,7 @@ function drawMentionsGraph() {
       .call(yAxis);
 
   // Draw the data
-  svg.selectAll(".dot")
-    .data(totalMentionsByDay)
+  svg.selectAll(".dot").data(totalMentionsByDay)
   .enter().append("circle")
     .attr("class", "dot")
     .attr("fill", color)
@@ -225,9 +225,7 @@ function drawSentimentsGraph()
       .call(yAxis);
 
   // Draw the data
-  svg.selectAll(".dot")
-    .data(totalSentimentsByDay)
-  .enter().append("circle")
+  svg.selectAll(".dot").data(totalSentimentsByDay).enter().append("circle")
     .attr("class", "dot")
     .attr("fill", color)
     .attr("r", radius)
