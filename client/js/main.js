@@ -25,10 +25,32 @@ fake_return_json =
    {daysAgo: 2, sentiment: 0.7},
    {daysAgo: 3, sentiment: 0.2}]
 
-function getTotalMentionsByDay() {
-
+function getTotalMentionsByDay()
+{
+  mention;
+  for (var j = 0; j < fake_return_json.length; i++)
+  {
+    if(!mention[fake_return_json[j].daysAgo])
+    {
+      mention.push({day: 0, mentions:0; sentiments = 0})
+      mention[fake_return_json[j].daysAgo].day = fake_return_json[j].daysAgo;
+    }
+    mention[fake_return_json[j].daysAgo].mentions++;
+  }
+  return mention;
 }
 
-function getAverageSentimentByDay() {
-  
+function getAverageSentimentByDay()
+{
+  sentiment;
+  for (var j = 0; j < fake_return_json.length; i++)
+  {
+    if(!sentiment[fake_return_json[j].daysAgo])
+    {
+      sentiment.push({day: 0, sentiments = 0})
+      sentiment[fake_return_json[j].daysAgo].day = fake_return_json[j].daysAgo;
+    }
+    sentiment[fake_return_json[j].daysAgo].sentiments += fake_return_json[j].sentiment/fake_return_json[j].mentions;
+  }
+  return sentiment;
 }
