@@ -50,33 +50,26 @@ function searchClicked()
 // Will be called after we get a response from the server
 ///
 
-function getTotalMentionsByDay()
+function getStatsByDay()
 {
   let mention = [];
+
   for (var i = 0; i < numberDays; i++)
   {
-    mention.push({day: i, mentions:0});
+    mention.push({day: i, mentions:0, sentiments: 0});
   }
+
   for (var j = 0; j < fake_return_json.length; j++)
   {
     mention[fake_return_json[j].daysAgo].mentions++;
   }
-  return mention;
-}
 
-function getAverageSentimentByDay()
-{
-  let sentiment = [];
-  for (var j = 0; j < fake_return_json.length; j++)
+  for (var j = 0; j < numberDays; j++)
   {
-    if(!sentiment[fake_return_json[j].daysAgo])
-    {
-      sentiment.push({day: 0, sentiments: 0})
-      sentiment[fake_return_json[j].daysAgo].day = fake_return_json[j].daysAgo;
-    }
-    sentiment[fake_return_json[j].daysAgo].sentiments += fake_return_json[j].sentiment/fake_return_json[j].mentions;
+    mention[fake_return_json[j].daysAgo].sentiments += fake_return_json[j].sentiment / mention[fake_return_json[j].daysAgo].mentions;
   }
-  return sentiment;
+
+  return mention;
 }
 
 function getListCompanies()
@@ -101,7 +94,7 @@ function drawMentionsGraph() {
   let container = d3.select("#mentions-container");
 
   // get the array of mentions by day
-  totalMentionsByDay = getTotalMentionsByDay();
+  totalMentionsByDay = getStatsByDay();
 
   let height = 500;
   let width;
@@ -172,5 +165,5 @@ function drawMentionsGraph() {
 function drawSentimentsGraph() {
   // grab the svg
   let svg = d3.select("#sentiments-graph")
-  averageSentimentByDay = getAverageSentimentByDay();
+  averageSentimentByDay = getStatsByDay();
 }
