@@ -4,6 +4,12 @@ const express = require('express')
 const resource = require('express-resource');
 const mongoose = require('mongoose');
 
+// resources
+const companyResource = require('./include/resource/company-resource.js');
+const mentionResource = require('./include/resource/mention-resource.js');
+
+const lookup = require('./include/mention-lookup.js');
+
 const LISTEN_PORT = 3001;
 
 /**
@@ -27,11 +33,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Main resource route setup
-const companyResource = require('./include/resource/company-resource.js');
 app.resource('company', companyResource);
-const mentionResource = require('./include/resource/mention-resource.js');
 app.resource('mention', mentionResource);
 // companyResource.setupRoutes("/company", app);
+
+// start api collection
+lookup.start();
 
 /**
  * SERVE
