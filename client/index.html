@@ -1,31 +1,33 @@
 <html>
   <head>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <title>
-      Company Sentiment
+      Company Sense
     </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <style>
-      body
-      {
-        background-image: url("https://newevolutiondesigns.com/images/freebies/city-wallpaper-47.jpg");
-      }
-    </style>
   </head>
   <body>
     <h1>
-      Company Sentiment
+      Company Sense
     </h1>
     <div class="field" id="searchform">
       <input type="text" id="searchterm" placeholder="Looking for..." />
       <button type="button" id="search">Sentiment it!</button>
     </div>
+
+    <div class="card" id="mentions-container">
+      <svg id="mentions-graph">
+      </svg>
+    </div>
+    
+    <div id="sentiments-container">
+      <svg id="sentiments-graph">
+      </svg>
+    </div>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="js/main.js"></script>
   </body>
-  <div id="mentions-container">
-    <svg id="mentions-graph">
-    </svg>
-  </div>
-  <div id="sentiments-container">
-    <svg id="sentiments-graph">
-    </svg>
-  </div>
 </html>
