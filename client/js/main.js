@@ -56,7 +56,7 @@ function getStatsByDay()
 
   for (var i = 0; i < numberDays; i++)
   {
-    mention.push({day: i, mentions:0, sentiments: 0});
+    mention.push({day: i, mentions: 0, sentiments: 0});
   }
 
   for (var j = 0; j < fake_return_json.length; j++)
@@ -118,15 +118,15 @@ function drawMentionsGraph() {
   }
 
   // set-up x-axis and x-values
-  let xValue = function(d) { return -d.daysAgo; };
-  let xScale = d3.scale.linear().domain([-7, 0]).range([margins.left, width - margins.right]);
+  let xValue = function(d) { return -d.day;};
+  let xScale = d3.scale.linear().domain([-6, 0]).range([margins.left, width - margins.right]);
   let xMap = function(d) { return xScale(xValue(d));};
-  let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0);
+  let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"));
 
   // set-up y-axis and y-values
-  let yValue = function(d) { return d.mentions };
+  let yValue = function(d) { return d.mentions};
   let yScale = d3.scale.linear().domain([maxMentions, 0]).range([margins.top, height - margins.bottom]);
-  let yMap = function(d) { return yScale(yValue(d)) };
+  let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
   let radius = 4;
