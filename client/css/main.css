@@ -28,7 +28,8 @@ h1
 .field>input[type=text],
 .field>button {
   display:block;
-  font:1.2em 'Montserrat Alternates';
+  font-size:1em;
+  font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
 }
 
 .field>input[type=text] {
