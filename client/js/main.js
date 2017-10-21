@@ -37,6 +37,7 @@ $("#search").click(searchClicked);
 function initialize() {
   getListCompanies();
   drawMentionsGraph();
+  drawSentimentsGraph();
 }
 
 function searchClicked() {
@@ -190,8 +191,10 @@ function drawSentimentsGraph()
 
   // get the maximum number of mentions: need this to set the y-axis
   let maxSentiments = 0;
+  let minSentiments = 0;
   console.log(totalSentimentsByDay);
   for (let i = 0; i < totalSentimentsByDay.length; i++)  {
+    minSentiments = Math.min(minSentiments, totalSentimentsByDay[i].sentiments);
     maxSentiments = Math.max(maxSentiments, totalSentimentsByDay[i].sentiments);
   }
 
@@ -203,7 +206,7 @@ function drawSentimentsGraph()
 
   // set-up y-axis and y-values
   let yValue = function(d) { return d.sentiments};
-  let yScale = d3.scale.linear().domain([maxMentions, 0]).range([margins.top, height - margins.bottom]);
+  let yScale = d3.scale.linear().domain([minSentiments, maxSentiments]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
