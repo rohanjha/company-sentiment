@@ -64,7 +64,7 @@ function getStatsByDay()
     mention[fake_return_json[j].daysAgo].mentions++;
   }
 
-  for (var j = 0; j < numberDays; j++)
+  for (var j = 0; j < fake_return_json.length; j++)
   {
     mention[fake_return_json[j].daysAgo].sentiments += fake_return_json[j].sentiment / mention[fake_return_json[j].daysAgo].mentions;
   }
