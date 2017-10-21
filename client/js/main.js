@@ -34,14 +34,28 @@ let fake_return_json =
 $(document).ready(initialize);
 $("#search").click(searchClicked);
 
-function initialize()
-{
+function initialize() {
+  getListCompanies();
   drawMentionsGraph();
 }
 
-function searchClicked()
+function searchClicked() {
+  $("#header").hide();
+}
+
+///
+// Functions to interface with the back-end
+///
+
+function getListCompanies() {
+  $.ajax({
+    method : "GET",
+    url : "localhost:3001/api/company"
+  });
+}
+
+function getMentionsCompany()
 {
-  // TODO: Get rid of the title bar
 }
 
 // TODO: Something to listen to submission of company name
@@ -70,16 +84,6 @@ function getStatsByDay()
   }
 
   return mention;
-}
-
-function getListCompanies()
-{
-
-}
-
-function getMentionsCompany()
-{
-
 }
 
 ///
