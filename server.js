@@ -15,8 +15,9 @@ const LISTEN_PORT = 3001;
 /**
  * DB SETUP
  */
+const credentials = require("./credentials.js");
 mongoose.connection.on('error', console.error.bind(console, 'ERROR (mongo):'));
-mongoose.connect('mongodb://localhost/todomvc', () => {
+mongoose.connect(`mongodb://${credentials.dbuser}:${credentials.dbpassword}@ds229435.mlab.com:29435/company-sense`, () => {
   console.log("INFO: Connected to MongoDB");
 });
 
@@ -33,8 +34,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Main resource route setup
-app.resource('company', companyResource);
-app.resource('mention', mentionResource);
+app.resource('api/company', companyResource);
+app.resource('api/mention', mentionResource);
 // companyResource.setupRoutes("/company", app);
 
 // start api collection

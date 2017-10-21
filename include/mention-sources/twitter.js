@@ -4,7 +4,7 @@ exports.fetchMentions = (addMention, analyzeText, getCompanyByName) => {
   // get the mentions using the API
 
   // parse the text to determine sentiment
-  // analyzeText(text, (stats) => {})
+  // analyzeText(text, (stats) => {}
 
   // get the company id associated with the company
   // getCompanyByName(companyName, (id) => {});

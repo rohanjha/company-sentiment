@@ -7,21 +7,35 @@ const Schema = mongoose.Schema;
 
 const companySchema = new Schema({
     name          : String,
-    ticker        : String
 });
 
 const Company = mongoose.model("Company", companySchema);
+
+/**
+ * METHODS
+ */
+exports.getCompanyFromName = (companyName, callback) => {
+  // TODO: improve search
+  Company.findOne({"name": new RegExp(companyName, "i") }, (err, company) => {
+    if (err) {
+      callback(null);
+    }
+    callback(company);
+  });
+}
 
 /**
  * REST ROUTES
  */
 exports.index = (req, res) => {
   if (req.query.q != undefined) {
-
-    // TODO: intelligent search
-
+    // TODO: improve search
+    Company.find({"name": new RegExp(req.query.q, "i") }, (err, results) => {
+      // console.log(results);
+      utils.handleError(err, res);
+      res.send(results);
+    });
   } else if (req.query.size != 0) { // undefined signfies no params
-    // utils.logInfo("params", req.params);
     Company.find(req.query, (err, results) => {
       utils.handleError(err, res);
       res.send(results);
@@ -65,10 +79,10 @@ exports.destroy = (req, res) => {
 // ** TESTING DATA **
 Company.count({}, (err, size) => {
   if (size === 0) {
-    let testCompany1 = new Company({"name": "United Airlines", "ticker": "UAL"});
-    let testCompany2 = new Company({"name": "Google", "ticker": "GOOG"});
-    let testCompany3 = new Company({"name": "Facebook", "ticker": "FB"});
-    let testCompany4 = new Company({"name": "Intel", "ticker": "INTC"});
+    let testCompany1 = new Company({"name": "United Airlines"});
+    let testCompany2 = new Company({"name": "Google"});
+    let testCompany3 = new Company({"name": "Facebook"});
+    let testCompany4 = new Company({"name": "Intel"});
     testCompany1.save();
     testCompany2.save();
     testCompany3.save();

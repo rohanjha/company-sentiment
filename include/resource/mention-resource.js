@@ -6,10 +6,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const mentionScheme = new Schema({
-    title         : String,
     company_id    : String,
     source        : String,
-    sentiment     : Number
+    url           : String,
+    sentiment     : Number,
+    timestamp     : Date
 });
 
 const Mention = mongoose.model("Mention", mentionScheme);
@@ -19,12 +20,7 @@ const Mention = mongoose.model("Mention", mentionScheme);
  */
 
 exports.addMention = (mention, err_cb) => {
-  const newMention = new Mention({
-    "title": mention.name,
-    "company_id": mention.company_id,
-    "source" : mention.source,
-    "sentiment": mention.sentiment
-  });
+  const newMention = new Mention(mention);
 
   newMention.save((err, mention) => {
     if (err) {
@@ -89,13 +85,39 @@ exports.destroy = (req, res) => {
 // ** TESTING DATA **
 Mention.count({}, (err, size) => {
   if (size === 0) {
-    let testMention1 = new Mention({"title": "United Airlines Does Bad Things", "company_id": "59eae432ff83914f9a39b614", "source": "The Washington Post", "sentiment": -0.9});
-    let testMention2 = new Mention({"title": "Why I Love Facebook", "company_id": "59eae432ff83914f9a39b616", "source": "Twitter", "sentiment": 0.8});
-    let testMention3 = new Mention({"title": "Intel: Meh", "company_id": "59eae432ff83914f9a39b617", "source": "Facebook", "sentiment": 0});
-    let testMention4 = new Mention({"title": "Facebook programmers forced to code in VR", "company_id": "59eae432ff83914f9a39b616", "source": "Wired", "sentiment": 0.4});
-    testMention1.save();
-    testMention2.save();
-    testMention3.save();
-    testMention4.save();
+      let testMention1 = new Mention({
+        "company_id": "59eb9fb6c18ed043b434d7fe", // Facebook
+        "source": "The Washington Post",
+        "url": "www.washingtonpost.com",
+        "sentiment": -0.9,
+        "timestamp": new Date(2017, 10, 21)});
+      testMention1.save();
+
+      let testMention2 = new Mention({
+        "company_id": "59eb9fb6c18ed043b434d7fd", // Google
+        "source": "Twitter",
+        "url": "www.twitter.com",
+        "sentiment": 0.8,
+        "timestamp": new Date(2017, 10, 19)
+      });
+      testMention2.save();
+
+      let testMention3 = new Mention({
+        "company_id": "59eb9fb6c18ed043b434d7ff", // Intel
+        "source": "Facebook",
+        "url": "www.facebook.com",
+        "sentiment": 0,
+        "timestamp": new Date(2016, 1, 15)
+      });
+      testMention3.save();
+
+      let testMention4 = new Mention({
+        "company_id": "59eb9fb6c18ed043b434d7fe", // Facebook
+        "source": "Wired",
+        "url": "www.wired.com",
+        "sentiment": -.1,
+        "timestamp": new Date(2017, 9, 28)
+      });
+      testMention4.save();
   }
 });
