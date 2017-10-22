@@ -178,10 +178,10 @@ function drawMentionsGraph() {
       .call(xAxis)
      .append("text")
       .attr("class", "label")
-      .attr("x", width - margins.right)
+      .attr("x", 480)
       .attr("y", 46)
       .style("text-anchor", "end")
-      .text("How many days ago?");
+      .text("No. of Days back");
 
   // Draw the y-axis
   svg.append("g")
@@ -230,7 +230,7 @@ function drawSentimentsGraph()
   container.attr("style:width", "80%");
   container.attr("style:height", "" + height + "px");
 
-  let margins = {"left" : 120, "top" : 10, "right" : 90, "bottom" : 76};
+  let margins = {"left" : 90, "top" : 10, "right" : 90, "bottom" : 76};
   let buffer = 0;
   width = document.getElementById("sentiments-graph").getBoundingClientRect().width;
 
@@ -274,10 +274,10 @@ function drawSentimentsGraph()
       .call(xAxis)
      .append("text")
       .attr("class", "label")
-      .attr("x", width - margins.right)
+      .attr("x", 480)
       .attr("y", 46)
       .style("text-anchor", "end")
-      .text("How many days ago?");
+      .text("No. of Days back");
 
   // Draw the y-axis
   svg.append("g")
