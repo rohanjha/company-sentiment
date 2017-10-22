@@ -1,31 +1,6 @@
 let numberDays = 7;
 
-let fake_return_json =
-  [{date: new Date(2017, 10, 20), sentiment: -3},
-   {date: new Date(2017, 10, 17), sentiment: 0},
-   {date: new Date(2017, 10, 17), sentiment: 0.4},
-   {date: new Date(2017, 10, 18), sentiment: 0.8},
-   {date: new Date(2017, 10, 19), sentiment: -0.5},
-   {date: new Date(2017, 10, 19), sentiment: 1},
-   {date: new Date(2017, 10, 18), sentiment: 0.6},
-   {date: new Date(2017, 10, 17), sentiment: 0.2},
-   {date: new Date(2017, 10, 19), sentiment: 0},
-   {date: new Date(2017, 10, 21), sentiment: -0.6},
-   {date: new Date(2017, 10, 20), sentiment: -0.4},
-   {date: new Date(2017, 10, 19), sentiment: 0.2},
-   {date: new Date(2017, 10, 21), sentiment: 0.8},
-   {date: new Date(2017, 10, 19), sentiment: 0.6},
-   {date: new Date(2017, 10, 17), sentiment: 0.9},
-   {date: new Date(2017, 10, 17), sentiment: -0.1},
-   {date: new Date(2017, 10, 17), sentiment: -1},
-   {date: new Date(2017, 10, 17), sentiment: -0.4},
-   {date: new Date(2017, 10, 19), sentiment: -0.6},
-   {date: new Date(2017, 10, 17), sentiment: 0.8},
-   {date: new Date(2017, 10, 17), sentiment: 1},
-   {date: new Date(2017, 10, 19), sentiment: -0.2},
-   {date: new Date(2017, 10, 21), sentiment: 0.6},
-   {date: new Date(2017, 10, 20), sentiment: 0.7},
-   {date: new Date(2017, 10, 18), sentiment: 0.2}]
+let active_data = [];
 
 ///
 // Stitching everything together
@@ -36,17 +11,12 @@ $("#search").click(searchClicked);
 
 function initialize() {
   getListCompanies();
-  drawMentionsGraph();
-  drawSentimentsGraph();
   $("#mentions-container").hide();
   $("#sentiments-container").hide();
 }
 
 function searchClicked() {
-  console.log("clicked search");
   $("h1").hide();
-  $("#mentions-container").show();
-  $("#sentiments-container").show();
   hasCompany();
 }
 
@@ -72,20 +42,37 @@ function hasCompany() {
   .done(function (json) {
     console.log(json);
     if (json.length == 0) {
-      // TODO: We don't have
+      active_data = [];
+      showNoData();
     } else {
-      getResultsForCompany(json[0].id);
+      getActiveData(json[0]._id);
     }
   });
 }
 
-function getResultsForCompany(id) {
+function getActiveData(id) {
+  let date = new Date();
+
   $.ajax({
-    method : "GET",
-    url : "http://localhost:3001/api/mention?company_id=" + id
+    method: "GET",
+    url: "http://localhost:3001/api/mention?start_date=" + new Date((date.setDate(date.getDate() - numberDays)))
   })
   .done(function (json) {
     console.log(json);
+    console.log(id);
+    active_data = json.filter(function(el) {
+      return el.company_id == id;
+    });
+
+    // TODO: Put this back
+    // if (active_data.length == 0) {
+      // showNoData();
+    // } else {
+      $("#mentions-container").show();
+      $("#sentiments-container").show();
+      drawMentionsGraph();
+      drawSentimentsGraph();
+    // s}
   });
 }
 
@@ -100,21 +87,34 @@ function getStatsByDay()
 {
   let mention = [];
 
+  // TODO: Add filter for company
   for (var i = 0; i < numberDays; i++)
   {
     mention.push({day: i, mentions: 0, sentiments: 0});
   }
 
-  for (var j = 0; j < fake_return_json.length; j++)
+  for (var j = 0; j < active_data.length; j++)
   {
-    mention[(new Date()).getDate()-fake_return_json[j].date.getDate()].mentions++;
+    var timeDiff = Math.abs((new Date()).getTime() - new Date(active_data[j].timestamp).getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    if (diffDays > 0 && diffDays < numberDays) {
+      mention[diffDays].mentions++;
+    }
   }
 
-  for (var j = 0; j < fake_return_json.length; j++)
+  for (var j = 0; j < active_data.length; j++)
   {
-    mention[(new Date()).getDate()-fake_return_json[j].date.getDate()].sentiments += fake_return_json[j].sentiment / mention[(new Date()).getDate()-fake_return_json[j].date.getDate()].mentions;
+    var timeDiff = Math.abs((new Date()).getTime() - new Date(active_data[j].timestamp).getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    if (diffDays > 0 && diffDays < numberDays) {
+      mention[diffDays].sentiments += (active_data[j].sentiment / mention[diffDays].mentions);
+    }
   }
 
+  console.log(active_data);
+  console.log(mention);
   return mention;
 }
 
@@ -147,7 +147,6 @@ function drawMentionsGraph() {
 
   // get the maximum number of mentions: need this to set the y-axis
   let maxMentions = 0;
-  console.log(totalMentionsByDay);
   for (let i = 0; i < totalMentionsByDay.length; i++)  {
     maxMentions = Math.max(maxMentions, totalMentionsByDay[i].mentions);
   }
@@ -156,13 +155,19 @@ function drawMentionsGraph() {
   let xValue = function(d) { return -d.day;};
   let xScale = d3.scale.linear().domain([-6, 0]).range([margins.left, width - margins.right]);
   let xMap = function(d) { return xScale(xValue(d));};
-  let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"));
+  let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"))
+  .innerTickSize(-width)
+  .outerTickSize(0)
+  .tickPadding(10);
 
   // set-up y-axis and y-values
   let yValue = function(d) { return d.mentions};
   let yScale = d3.scale.linear().domain([1.2 * maxMentions, 0]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
-  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
+  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0)
+  .innerTickSize(-height)
+  .outerTickSize(0)
+  .tickPadding(10);
 
   let radius = 3;
   let color = 0x000000;
@@ -237,9 +242,7 @@ function drawSentimentsGraph()
   // get the maximum number of mentions: need this to set the y-axis
   let maxSentiments = 0;
   let minSentiments = 0;
-  console.log(totalSentimentsByDay);
   for (let i = 0; i < totalSentimentsByDay.length; i++)  {
-    console.log(totalSentimentsByDay[i].sentiments);
     minSentiments = Math.min(minSentiments, totalSentimentsByDay[i].sentiments);
     maxSentiments = Math.max(maxSentiments, totalSentimentsByDay[i].sentiments);
   }
@@ -248,16 +251,19 @@ function drawSentimentsGraph()
   let xValue = function(d) { return -d.day; };
   let xScale = d3.scale.linear().domain([-6, 0]).range([margins.left, width - margins.right]);
   let xMap = function(d) { return xScale(xValue(d));};
-  let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"));
-
-  console.log(minSentiments);
-  console.log(maxSentiments);
+  let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"))
+  .innerTickSize(-width)
+  .outerTickSize(0)
+  .tickPadding(10);
 
   // set-up y-axis and y-values
   let yValue = function(d) { return d.sentiments; };
   let yScale = d3.scale.linear().domain([maxSentiments * 1.2, minSentiments * 1.2]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
-  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(1);
+  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(1)
+  .innerTickSize(-height)
+  .outerTickSize(0)
+  .tickPadding(10);
 
   let radius = 3;
   let color = 0x000000;
@@ -303,4 +309,11 @@ function drawSentimentsGraph()
   svg.append("path")
      .attr("class", "line")
      .attr("d", valueline(totalSentimentsByDay));
+}
+
+function showNoData() {
+  window.alert("No data for this company :(");
+  active_data = [];
+  $("#mentions-container").hide();
+  $("#sentiments-container").hide();
 }

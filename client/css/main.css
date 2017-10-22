@@ -7,7 +7,9 @@ body {
 }
 
 h1 {
+  font-family: 'Francois One', sans-serif;
   font-size: 92px;
+  font-weight: bolder;
   padding: 80px;
   text-align: center;
   text-transform: uppercase;
@@ -47,10 +49,10 @@ h1 {
   margin: auto;
   margin-top: 10px;
   margin-bottom: 10px;
-  border-radius: 4px;
 }
 
 #searchterm {
+  border-radius: 4px;
   margin-right: 5px;
 }
 
@@ -63,8 +65,12 @@ h1 {
 }
 
 #sentiments-container {
-  margin-top: 30px;
+  margin-top: 10px;
   margin-bottom: 30px;
+}
+
+.tick line{
+  opacity: 0.2;
 }
 
 .line {
