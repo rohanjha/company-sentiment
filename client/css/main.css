@@ -47,6 +47,21 @@ h1 {
   border: 0.2em solid rgb(26, 188, 156);
 }
 
+svg
+{
+  stroke-width: 3px;
+}
+
 #mentions-graph {
   padding-top: 20px;
+}
+
+.xAxis path, .yAxis path
+{
+  stroke: #474747;
+  fill: none;
+}
+
+path.plot {
+  stroke: #FFA319;
 }

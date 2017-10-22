@@ -137,6 +137,10 @@ function drawMentionsGraph() {
   let radius = 4;
   let color = 0x000000;
 
+  let line = d3.svg.line()
+    .x(function (d) { return x(d.day); })
+    .y(function (d) { return y(d.mentions); });
+
   // Draw the x-axis
   svg.append("g")
       .attr("class", "axis")
@@ -163,6 +167,14 @@ function drawMentionsGraph() {
     .attr("r", radius)
     .attr("cx", xMap)
     .attr("cy", yMap);
+
+  for (var i=0; i < totalMentionsByDay.length; i++)
+  {
+    svg.append("path")
+      .attr("class", "plot")
+      .datum(totalMentionsByDay[i])
+      .attr("d", line);
+  }
 }
 
 function drawSentimentsGraph()
