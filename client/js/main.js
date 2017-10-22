@@ -72,7 +72,7 @@ function getActiveData(id) {
       $("#sentiments-container").show();
       drawMentionsGraph();
       drawSentimentsGraph();
-    // s}
+    }
   });
 }
 
