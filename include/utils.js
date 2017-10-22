@@ -1,4 +1,5 @@
 "use strict";
+const credentials = require("../credentials.js");
 
 exports.handleError = (err, res, ecode, extra) => {
     if (ecode == undefined) {
@@ -20,4 +21,8 @@ exports.logInfo = (info, extra) => {
 exports.logError = (err, extra) => {
     console.error("ERROR (server): " + err);
     if(extra) console.log(extra);
+}
+
+exports.getGoogleNewsAPIURL = (route) => {
+    return `https://newsapi.org/v1/${route}?language=en&apiKey=${credentials.google_news_api_key}`;
 }

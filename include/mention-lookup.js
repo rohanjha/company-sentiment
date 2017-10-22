@@ -5,16 +5,16 @@
 const utils = require("./utils.js");
 const companyResource = require("./resource/company-resource.js");
 const mentionResource = require("./resource/mention-resource.js");
-const textAnalyzer = require("./text-analyzer.js");
 
 const mentionSources = [
     require("./mention-sources/twitter.js"),
-    // require("mention-sources/bloomberg.js")
+    require("./mention-sources/google-news-api.js")
 ]
 
 let runTimeout = null;
 
-exports.start = (interval) => {
+exports.start = (initialStart, interval) => {
+    setTimeout(run, initialStart);
     runTimeout = setInterval(run, interval);
 }
 
@@ -24,9 +24,7 @@ function run() {
     */
     utils.logInfo("fetching mentions...");
 
-    for (let i = 0; i < mentionSources; i++) {
-        mentionSources[i].fetchMentions(mentionResource.addMention,
-            textAnalyzer.analyze,
-            companyResource.getCompanyId);
-        }
+    for (let i = 0; i < mentionSources.length; i++) {
+        mentionSources[i].fetchMentions(mentionResource.addMention);
     }
+}

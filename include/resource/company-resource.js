@@ -4,12 +4,13 @@ const utils = require("../utils.js");
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-
 const companySchema = new Schema({
     name          : String,
+    machine_name  : String
 });
 
 const Company = mongoose.model("Company", companySchema);
+exports.Company = Company;
 
 /**
 * METHODS
@@ -24,10 +25,16 @@ exports.getCompanyFromName = (companyName, callback) => {
     });
 }
 
-exports.forEachCompany = (callback) => {
-    Company.find({}, (err, results) => {
+exports.getCompanies = (callback, query) => {
+    if (query == null) query = {}
+    Company.find(query, (err, results) => {
+        utils.logError("error in searching for companies", err);
         callback(results);
     });
+}
+
+exports.addCompany = (name, callback) => {
+    new Company({"name": name}).save(callback);
 }
 
 /**
@@ -85,22 +92,3 @@ exports.update = (req, res) => {
 exports.destroy = (req, res) => {
     res.status(400).send("The company table is immutable.");
 };
-
-// ** TESTING DATA **
-Company.count({}, (err, size) => {
-    if (size === 0) {
-        let testCompany1 = new Company({"name": "United Airlines"});
-        let testCompany2 = new Company({"name": "Google"});
-        let testCompany3 = new Company({"name": "Facebook"});
-        let testCompany4 = new Company({"name": "Intel"});
-        testCompany1.save();
-        testCompany2.save();
-        testCompany3.save();
-        testCompany4.save();
-    }
-});
-
-// print initally
-Company.find((err, companies) => {
-    utils.logInfo("companies:", companies);
-});
