@@ -36,8 +36,8 @@ function analyzeDocument(document, callback) {
                         }
                     } else {
                         organizations[entity.name].count++;
-                        organizations[entity.name].totalSentimentScore += entity.sentiment.score;
-                        organizations[entity.name].totalSentimentMag += entity.sentiment.mag;
+                        organizations[entity.name].totalSentimentScore = organizations[entity.name].totalSentimentScore + entity.sentiment.score;
+                        organizations[entity.name].totalSentimentMag = organizations[entity.name].totalSentimentMag + entity.sentiment.mag;
                     }
                 }
             });
@@ -45,10 +45,10 @@ function analyzeDocument(document, callback) {
             // send sentiment for every organization in the text
             for (let organization in organizations) {
                 const count = organizations[organization].count;
-                const sentiment_score = organizations[organization].totalSentimentScore / count;
-                if (sentiment_score == NaN) sentiment_score = 0;
-                const sentiment_mag = 0; //organizations[organization].totalSentimentMag / count;
-                if (sentiment_mag == NaN) sentiment_mag = 0;
+                let sentiment_score = organizations[organization].totalSentimentScore / count;
+                if (isNaN(sentiment_score)) sentiment_score = 0;
+                let sentiment_mag = organizations[organization].totalSentimentMag / count;
+                if (isNaN(sentiment_mag)) sentiment_mag = 0;
 
                 callback({
                     "sentiment_score" : sentiment_score,
@@ -69,7 +69,8 @@ function analyzeDocument(document, callback) {
 exports.analyzeText = (text, callback) => {
     // prevent TONS of calls : TODO: REMOVE!!!!!
     numAnalyzeCalls++;
-    if (numAnalyzeCalls >= MAX_SESSION_CALLS) {
+    if (MAX_SESSION_CALLS >= 0 && numAnalyzeCalls >= MAX_SESSION_CALLS) {
+        utils.logError("MAX_SESSION_CALLS exceeded... blocking further calls");
         callback(null);
         return;
     }

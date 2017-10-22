@@ -15,20 +15,21 @@ function parseArticle(article, sourceName, addMention) {
     // we assume the article source and timestamp (which includes time)
     // are enough data (URL is easiest, BUT it does tend to change)
     mentionResource.getMentions((results) => {
-        utils.logInfo("mentions", results);
-        if (results.length == 0) {
+        if (results.length === 0) {
             // analyze the article text to determine sentiments
             // for now, instead of scraping, just use the given API description...TODO
             let text = article.description;
             textAnalyzer.analyzeText(text, (stats) => {
-                utils.logInfo("storing mention with stats: ", stats);
-                if (stats == null ||
-                    stats.company_name == null ||
-                    stats.sentiment_mag == null ||
-                    stats.sentiment_score == null) {
-                    utils.logError("Invalid text analysis property", stats);
+                if (stats == null) {
+                    utils.logError("text analyzing did not complete");
+                    return;
+                } else if (stats.company_name == null ||
+                            stats.sentiment_mag == null ||
+                            stats.sentiment_score == null) {
+                    utils.logError("some invalid text analysis property exists:", stats);
                     return;
                 }
+                utils.logInfo("storing mention with stats: ", stats);
 
                 // get company id from name
                 companyResource.getCompanyFromName(stats.company_name, (company) => {
@@ -44,6 +45,7 @@ function parseArticle(article, sourceName, addMention) {
                     // add a new company if we find one
                     if (company == null) {
                         companyResource.addCompany(stats.company_name, (err, newCompany) => {
+                            utils.logInfo("adding new company from mention", newCompany)
                             // actually add mention to database
                             mention["company_id"] = newCompany._id;
                             addMention(mention);
@@ -55,6 +57,8 @@ function parseArticle(article, sourceName, addMention) {
                     }
                 });
             });
+        } else {
+            utils.logInfo(`skipped existing mentions from ${article.url}`);
         }
     }, { "url" : article.url }); // "source": source, "timestamp", new Date(article.publishedAt)
 }
@@ -75,6 +79,7 @@ exports.fetchMentions = (addMention) => {
         .then((res) => {
             // pass on json as promise
             return res.json();
+
         }).then((json) => {
             utils.logInfo(`fetched articles from ${source.name}`);
 
@@ -82,9 +87,9 @@ exports.fetchMentions = (addMention) => {
                 utils.logError("News api articles list is null!");
             } else {
                 json.articles.forEach((article) => {
-                    if (j < 10) {
+                    // if (j < 10) {
                         parseArticle(article, source.name, addMention);
-                    }
+                    // }
                     j++;
                 });
             }
@@ -92,16 +97,4 @@ exports.fetchMentions = (addMention) => {
             utils.logError(err);
         });
     }
-
-    // get the company id associated with the company
-    // getCompanyByName(companyName, (id) => {});
-
-    // add the mention using the callback above
-    // addMention({
-    //  "company_id" : company._id,
-    //  "source" : source.TWITTER,
-    //  "url" : response.url,
-    //  "sentiment" : sentiment,
-    //  "timestamp" : new Date(response.date)
-    //})
 }

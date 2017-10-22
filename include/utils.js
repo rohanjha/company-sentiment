@@ -14,13 +14,13 @@ exports.handleError = (err, res, ecode, extra) => {
 }
 
 exports.logInfo = (info, extra) => {
-    console.error("INFO (server): " + info);
-    if (extra) console.log(extra);
+    console.error("INFO  (server): " + info);
+    if (extra !== undefined) console.log(extra);
 }
 
 exports.logError = (err, extra) => {
     console.error("ERROR (server): " + err);
-    if(extra) console.log(extra);
+    if (extra !== undefined) console.log(extra);
 }
 
 exports.getGoogleNewsAPIURL = (route) => {

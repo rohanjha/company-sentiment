@@ -19,8 +19,8 @@ const mentionSources = require('./include/mention-sources.js');
 */
 const LISTEN_PORT = 3001;
 const MONGO_DB_URL = "ds229435.mlab.com:29435/company-sense";
-const MENTION_FETCH_INITIAL = 1000; // ms
-const MENTION_FETCH_INTERVAL = 60000; // ms
+const MENTION_FETCH_INITIAL = 2000; // ms
+const MENTION_FETCH_INTERVAL = 240000; // ms
 
 /**
 * DB SETUP
