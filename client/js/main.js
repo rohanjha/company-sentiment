@@ -64,7 +64,7 @@ function getActiveData(id) {
       return el.company_id == id;
     });
 
-    TODO: Put this back
+    // TODO: Put this back
     if (active_data.length == 0) {
        showNoData();
     } else {
