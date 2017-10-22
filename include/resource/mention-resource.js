@@ -46,7 +46,7 @@ exports.index = (req, res) => {
         });
 
     // route for searching by any attribute
-    } else if (req.query.size != 0) {
+    } else if (req.query != undefined) {
         let query = req.query;
 
         // create date query if requested
@@ -65,6 +65,7 @@ exports.index = (req, res) => {
 
         Mention.find(query, (err, results) => {
             utils.handleError(err, res);
+            console.log(results);
             res.send(results);
         });
 
@@ -72,6 +73,7 @@ exports.index = (req, res) => {
     } else {
         Mention.find((err, mentions) => {
             utils.handleError(err, res);
+            console.log(mentions);
             res.send(mentions);
         });
     }
