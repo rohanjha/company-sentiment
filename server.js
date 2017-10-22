@@ -20,7 +20,7 @@ const mentionSources = require('./include/mention-sources.js');
 const LISTEN_PORT = 3001;
 const MONGO_DB_URL = "ds229435.mlab.com:29435/company-sense";
 const MENTION_FETCH_INITIAL = 2000; // ms
-const MENTION_FETCH_INTERVAL = 240000; // ms
+const MENTION_FETCH_INTERVAL = 2400000; // ms
 
 /**
 * DB SETUP
@@ -59,7 +59,7 @@ app.resource('api/mention', mentionResource);
 /**
 * SERVE
 */
-populateCompanies.populate();
+// populateCompanies.populate();
 // mentionSources.populate();
 
 // start api collection
@@ -67,6 +67,11 @@ lookup.start(MENTION_FETCH_INITIAL, MENTION_FETCH_INTERVAL);
 
 // let analyzer = require("./include/text-analyzer.js");
 // analyzer.analyzeText("Google, headquartered in Mountain View, unveiled the new Android phone at the Consumer Electronic Show.  Sundar Pichai said in his keynote that users love their new Android phones.", (sentiments) => console.log(sentiments));
+
+// utils.getTextOfURL("https://www.sitepoint.com/web-scraping-in-node-js/", (txt) => console.log(txt));
+//
+// let backupDB = require("./backup-db.js");
+// backupDB.backup();
 
 app.listen(LISTEN_PORT, () => {
     utils.logInfo(`API server listening on port ${LISTEN_PORT}`)

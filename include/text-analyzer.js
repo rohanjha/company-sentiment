@@ -1,7 +1,7 @@
 /**
 * Analyzes text to determine characteristics
 */
-const MAX_SESSION_CALLS = 100;
+const MAX_SESSION_CALLS = -1; // 100
 
 const utils = require("./utils.js");
 

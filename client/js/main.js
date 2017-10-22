@@ -8,6 +8,12 @@ let active_data = [];
 
 $(document).ready(initialize);
 $("#search").click(searchClicked);
+const ENTER_KEYCODE = 13;
+$("#searchterm").keydown((ev) => {
+  if ( ev.which == ENTER_KEYCODE || ev.keyCode == ENTER_KEYCODE) {
+    searchClicked();
+  }
+});
 
 function initialize() {
   getListCompanies();
@@ -45,29 +51,32 @@ function hasCompany() {
       active_data = [];
       showNoData();
     } else {
-      getActiveData(json[0]._id);
+      getActiveData(json[0]._id, json[0].name);
     }
   });
 }
 
-function getActiveData(id) {
+function getActiveData(id, name) {
   let date = new Date();
 
   $.ajax({
     method: "GET",
-    url: "http://localhost:3001/api/mention?start_date=" + new Date((date.setDate(date.getDate() - numberDays)))
+    url: "http://localhost:3001/api/mention?company_id=" + id
   })
   .done(function (json) {
     console.log(json);
     console.log(id);
+    let oldest_date = new Date((date.setDate(date.getDate() - numberDays)));
     active_data = json.filter(function(el) {
-      return el.company_id == id;
+      return new Date(el.timestamp) >= oldest_date;
     });
 
     // TODO: Put this back
     if (active_data.length == 0) {
        showNoData();
     } else {
+      console.log("Active data filtered")
+      console.log(active_data);
       $("#mentions-container").show();
       $("#sentiments-container").show();
       drawMentionsGraph();
@@ -109,7 +118,7 @@ function getStatsByDay()
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
     if (diffDays > 0 && diffDays < numberDays) {
-      mention[diffDays].sentiments += (active_data[j].sentiment / mention[diffDays].mentions);
+      mention[diffDays].sentiments += (active_data[j].sentiment_score / mention[diffDays].mentions);
     }
   }
 
@@ -123,9 +132,9 @@ function getStatsByDay()
 ///
 
 function drawMentionsGraph() {
-  svg.html("");
   // grab the svg
   let svg = d3.select("#mentions-graph");
+  svg.html("");
 
   // grab its container
   let container = d3.select("#mentions-container");
@@ -218,10 +227,9 @@ function drawMentionsGraph() {
 
 function drawSentimentsGraph()
 {
-  svg.html("");
-
   // grab the svg
   let svg = d3.select("#sentiments-graph");
+  svg.html("");
 
   // grab its container
   let container = d3.select("#sentiments-container");

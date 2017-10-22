@@ -29,9 +29,9 @@ exports.getCompanyFromName = (companyName, callback) => {
 }
 
 exports.getCompanies = (callback, query) => {
-    if (query == null) query = {}
+    if (query == undefined) query = {}
     Company.find(query, (err, results) => {
-        utils.logError("error in searching for companies", err);
+        if (err) utils.logError("error in searching for companies", err);
         callback(results);
     });
 }
@@ -50,6 +50,7 @@ exports.index = (req, res) => {
         Company.find({"name": new RegExp(req.query.q, "i") }, (err, results) => {
             // console.log(results);
             utils.handleError(err, res);
+            utils.logInfo(`search for company '${req.query.q}' yielded:`, results);
             res.send(results);
         });
 

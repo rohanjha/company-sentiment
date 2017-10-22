@@ -16,45 +16,52 @@ function parseArticle(article, sourceName, addMention) {
     // are enough data (URL is easiest, BUT it does tend to change)
     mentionResource.getMentions((results) => {
         if (results.length === 0) {
-            // analyze the article text to determine sentiments
-            // for now, instead of scraping, just use the given API description...TODO
-            let text = article.description;
-            textAnalyzer.analyzeText(text, (stats) => {
-                if (stats == null) {
-                    utils.logError("text analyzing did not complete");
-                    return;
-                } else if (stats.company_name == null ||
-                            stats.sentiment_mag == null ||
-                            stats.sentiment_score == null) {
-                    utils.logError("some invalid text analysis property exists:", stats);
-                    return;
-                }
-                utils.logInfo("storing mention with stats: ", stats);
-
-                // get company id from name
-                companyResource.getCompanyFromName(stats.company_name, (company) => {
-                    let mention = {
-                        // doing company_id next
-                        source          : sourceName,
-                        url             : article.url,
-                        sentiment_mag   : stats.sentiment_mag,
-                        sentiment_score : stats.sentiment_score,
-                        timestamp       : new Date(article.publishedAt)
+            // get the article text (we can also use article.description as a backup)
+            // let text = article.description;
+            utils.logInfo(`fetching article text @`, article.url);
+            utils.getTextAtURL(article.url, (text) => {
+                // analyze the article text to determine sentiments
+                textAnalyzer.analyzeText(text, (stats) => {
+                    if (stats == null) {
+                        utils.logError("text analyzing did not complete");
+                        return;
+                    } else if (stats.company_name == null ||
+                                stats.sentiment_mag == null ||
+                                stats.sentiment_score == null) {
+                        utils.logError("some invalid text analysis property exists:", stats);
+                        return;
                     }
+                    utils.logInfo("storing mention with stats: ", stats);
 
-                    // add a new company if we find one
-                    if (company == null || company.length == 0) {
-                        companyResource.addCompany(stats.company_name, (err, newCompany) => {
-                            utils.logInfo("adding new company from mention", newCompany)
+                    // get company id from name
+                    companyResource.getCompanyFromName(stats.company_name, (company) => {
+                        let mention = {
+                            // doing company_id next
+                            source          : sourceName,
+                            url             : article.url,
+                            sentiment_mag   : stats.sentiment_mag,
+                            sentiment_score : stats.sentiment_score,
+                            timestamp       : new Date(article.publishedAt)
+                        }
+
+                        // add a new company if we find one
+                        if (company == null) {
+                            companyResource.addCompany(stats.company_name, (err, newCompany) => {
+                                if (err || newCompany == undefined) {
+                                    utils.logError("new company couldn't be created ", err);
+                                } else {
+                                    utils.logInfo("adding new company from mention", newCompany)
+                                    // actually add mention to database
+                                    mention["company_id"] = newCompany._id;
+                                    addMention(mention);
+                                }
+                            });
+                        } else {
                             // actually add mention to database
-                            mention["company_id"] = newCompany._id;
+                            mention["company_id"] = company._id;
                             addMention(mention);
-                        });
-                    } else {
-                        // actually add mention to database
-                        mention["company_id"] = company._id;
-                        addMention(mention);
-                    }
+                        }
+                    });
                 });
             });
         } else {
@@ -74,7 +81,7 @@ exports.fetchMentions = (addMention) => {
         let source = sources.googleNewsSources[i];
 
         // https://newsapi.org/#apiArticles
-        const SORT_METHOD = "top";
+        const SORT_METHOD = "latest"; // top | latest | popular
         fetch(`${utils.getGoogleNewsAPIURL("articles")}&sortBy=${SORT_METHOD}&source=${source.id}`)
         .then((res) => {
             // pass on json as promise

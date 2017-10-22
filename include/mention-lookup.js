@@ -14,7 +14,7 @@ const mentionSources = [
 let runTimeout = null;
 
 exports.start = (initialStart, interval) => {
-    setTimeout(run, initialStart);
+    if (initialStart >= 0) setTimeout(run, initialStart);
     runTimeout = setInterval(run, interval);
 }
 
