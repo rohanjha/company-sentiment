@@ -8,7 +8,10 @@ const Schema = mongoose.Schema;
 const mentionScheme = new Schema({
     company_id      : String,
     source          : String,
-    url             : String,
+    url             : {
+        type: String,
+        unique: true
+    },
     sentiment_mag   : Number,
     sentiment_score : Number,
     timestamp       : Date

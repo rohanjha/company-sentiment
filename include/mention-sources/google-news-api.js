@@ -43,7 +43,7 @@ function parseArticle(article, sourceName, addMention) {
                     }
 
                     // add a new company if we find one
-                    if (company == null) {
+                    if (company == null || company.length == 0) {
                         companyResource.addCompany(stats.company_name, (err, newCompany) => {
                             utils.logInfo("adding new company from mention", newCompany)
                             // actually add mention to database
