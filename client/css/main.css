@@ -40,7 +40,13 @@ h1 {
   border: none;
 }
 
-#mentions-container {
+#searchform {
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#mentions-container, #sentiments-container {
   width: 60%;
   margin: 0 auto; /* Added */
   float: none; /* Added */

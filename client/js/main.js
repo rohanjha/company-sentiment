@@ -1,31 +1,31 @@
 let numberDays = 7;
 
 let fake_return_json =
-  [{daysAgo: 0, sentiment: -0.3},
-   {daysAgo: 2, sentiment: 0},
-   {daysAgo: 3, sentiment: 0.4},
-   {daysAgo: 4, sentiment: 0.8},
-   {daysAgo: 2, sentiment: -0.5},
-   {daysAgo: 1, sentiment: 1},
-   {daysAgo: 3, sentiment: 0.6},
-   {daysAgo: 4, sentiment: 0.2},
-   {daysAgo: 5, sentiment: 0},
-   {daysAgo: 6, sentiment: -0.6},
-   {daysAgo: 6, sentiment: -0.4},
-   {daysAgo: 3, sentiment: 0.2},
-   {daysAgo: 2, sentiment: 0.8},
-   {daysAgo: 5, sentiment: 0.6},
-   {daysAgo: 6, sentiment: 0.9},
-   {daysAgo: 1, sentiment: -0.1},
-   {daysAgo: 0, sentiment: -1},
-   {daysAgo: 2, sentiment: -0.4},
-   {daysAgo: 3, sentiment: -0.6},
-   {daysAgo: 5, sentiment: 0.8},
-   {daysAgo: 1, sentiment: 1},
-   {daysAgo: 0, sentiment: -0.2},
-   {daysAgo: 2, sentiment: 0.6},
-   {daysAgo: 2, sentiment: 0.7},
-   {daysAgo: 3, sentiment: 0.2}]
+  [{date: new Date(2017, 10, 20), sentiment: -0.3},
+   {date: new Date(2017, 10, 15), sentiment: 0},
+   {date: new Date(2017, 10, 17), sentiment: 0.4},
+   {date: new Date(2017, 10, 18), sentiment: 0.8},
+   {date: new Date(2017, 10, 19), sentiment: -0.5},
+   {date: new Date(2017, 10, 19), sentiment: 1},
+   {date: new Date(2017, 10, 16), sentiment: 0.6},
+   {date: new Date(2017, 10, 17), sentiment: 0.2},
+   {date: new Date(2017, 10, 19), sentiment: 0},
+   {date: new Date(2017, 10, 21), sentiment: -0.6},
+   {date: new Date(2017, 10, 20), sentiment: -0.4},
+   {date: new Date(2017, 10, 16), sentiment: 0.2},
+   {date: new Date(2017, 10, 21), sentiment: 0.8},
+   {date: new Date(2017, 10, 16), sentiment: 0.6},
+   {date: new Date(2017, 10, 17), sentiment: 0.9},
+   {date: new Date(2017, 10, 17), sentiment: -0.1},
+   {date: new Date(2017, 10, 17), sentiment: -1},
+   {date: new Date(2017, 10, 16), sentiment: -0.4},
+   {date: new Date(2017, 10, 15), sentiment: -0.6},
+   {date: new Date(2017, 10, 16), sentiment: 0.8},
+   {date: new Date(2017, 10, 17), sentiment: 1},
+   {date: new Date(2017, 10, 19), sentiment: -0.2},
+   {date: new Date(2017, 10, 21), sentiment: 0.6},
+   {date: new Date(2017, 10, 20), sentiment: 0.7},
+   {date: new Date(2017, 10, 18), sentiment: 0.2}]
 
 ///
 // Stitching everything together
@@ -41,7 +41,9 @@ function initialize() {
 }
 
 function searchClicked() {
-  $("#header").hide();
+  console.log("clicked search");
+  $("h1").hide();
+  hasCompany();
 }
 
 ///
@@ -51,15 +53,40 @@ function searchClicked() {
 function getListCompanies() {
   $.ajax({
     method : "GET",
-    url : "localhost:3001/api/company"
+    url : "http://localhost:3001/api/company"
+  })
+  .done(function (json) {
+    console.log(json);
   });
 }
 
-function getMentionsCompany()
-{
+function hasCompany() {
+  $.ajax({
+    method : "GET",
+    url : "http://localhost:3001/api/company?q=" + $("#searchterm").val()
+  })
+  .done(function (json) {
+    console.log(json);
+    if (json.length == 0) {
+      // TODO: We don't have
+    } else {
+      getResultsForCompany(json[0].id);
+    }
+  });
+}
+
+function getResultsForCompany(id) {
+  $.ajax({
+    method : "GET",
+    url : "http://localhost:3001/api/mention?company_id=" + id
+  })
+  .done(function (json) {
+    console.log(json);
+  });
 }
 
 // TODO: Something to listen to submission of company name
+// TODO: Respoond to date instead of days ago
 
 ///
 // Will be called after we get a response from the server
