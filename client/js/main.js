@@ -161,12 +161,12 @@ function drawMentionsGraph() {
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
-  let radius = 3;
+  let radius = 4;
   let color = 0x000000;
 
-  let line = d3.svg.line()
-    .x(function (d) { return x(d.day); })
-    .y(function (d) { return y(d.mentions); });
+  var valueline = d3.svg.line()
+    .x(function(d) { return xMap(d); })
+    .y(function(d) { return yMap(d); });
 
   // Draw the x-axis
   svg.append("g")
@@ -195,13 +195,9 @@ function drawMentionsGraph() {
     .attr("cx", xMap)
     .attr("cy", yMap);
 
-  for (var i=0; i < totalMentionsByDay.length; i++)
-  {
-    svg.append("path")
-      .attr("class", "plot")
-      .datum(totalMentionsByDay[i])
-      .attr("d", line);
-  }
+  svg.append("path")
+      .attr("class", "line")
+      .attr("d", valueline(totalMentionsByDay));
 }
 
 function drawSentimentsGraph()
