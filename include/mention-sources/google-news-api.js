@@ -81,7 +81,7 @@ exports.fetchMentions = (addMention) => {
         let source = sources.googleNewsSources[i];
 
         // https://newsapi.org/#apiArticles
-        const SORT_METHOD = "latest"; // top | latest | popular
+        const SORT_METHOD = "top"; // top | latest | popular
         fetch(`${utils.getGoogleNewsAPIURL("articles")}&sortBy=${SORT_METHOD}&source=${source.id}`)
         .then((res) => {
             // pass on json as promise
