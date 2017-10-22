@@ -118,7 +118,6 @@ function getStatsByDay()
 // Will be called after the above data is parsed
 ///
 
-
 function drawMentionsGraph() {
   // grab the svg
   let svg = d3.select("#mentions-graph");
@@ -138,7 +137,7 @@ function drawMentionsGraph() {
   container.attr("style:width", "80%");
   container.attr("style:height", "" + height + "px");
 
-  let margins = {"left" : 120, "top" : 10, "right" : 90, "bottom" : 76};
+  let margins = {"left" : 90, "top" : 10, "right" : 90, "bottom" : 76};
   let buffer = 0;
   width = document.getElementById("mentions-graph").getBoundingClientRect().width;
 
@@ -243,7 +242,7 @@ function drawSentimentsGraph()
   let yValue = function(d) { return d.sentiments; };
   let yScale = d3.scale.linear().domain([minSentiments, maxSentiments]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
-  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
+  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(1);
 
   let radius = 3;
   let color = 0x000000;
