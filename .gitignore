@@ -1,6 +1,7 @@
 # CUSTOM
 data/
 credentials.js
+google-credentials.json
 
 gs
 logs
@@ -61,4 +62,3 @@ typings/
 # dotenv environment variables file
 .env
 
-data/

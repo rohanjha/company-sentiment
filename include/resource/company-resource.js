@@ -24,6 +24,12 @@ exports.getCompanyFromName = (companyName, callback) => {
     });
 }
 
+exports.forEachCompany = (callback) => {
+    Company.find({}, (err, results) => {
+        callback(results);
+    });
+}
+
 /**
 * REST ROUTES
 */
