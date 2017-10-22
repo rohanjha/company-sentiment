@@ -238,19 +238,24 @@ function drawSentimentsGraph()
   }
 
   // set-up x-axis and x-values
-  let xValue = function(d) { return -d.day;};
+  let xValue = function(d) { return -d.day; };
   let xScale = d3.scale.linear().domain([-6, 0]).range([margins.left, width - margins.right]);
   let xMap = function(d) { return xScale(xValue(d));};
   let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"));
 
   // set-up y-axis and y-values
-  let yValue = function(d) { return d.sentiments};
+  let yValue = function(d) { return d.sentiments; };
   let yScale = d3.scale.linear().domain([minSentiments, maxSentiments]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
   let radius = 4;
   let color = 0x000000;
+
+  // Define the line
+  var valueline = d3.svg.line()
+    .x(function(d) { return xMap(d); })
+    .y(function(d) { return yMap(d); });
 
   // Draw the x-axis
   svg.append("g")
@@ -277,4 +282,14 @@ function drawSentimentsGraph()
     .attr("r", radius)
     .attr("cx", xMap)
     .attr("cy", yMap);
+
+  svg.append("path")
+     .attr("class", "line")
+     .attr("d", valueline(totalSentimentsByDay));
+}
+
+// gridlines in x axis function
+function make_x_gridlines() {
+    return d3.axisBottom(x)
+        .ticks(5)
 }
