@@ -174,10 +174,7 @@ function drawMentionsGraph() {
   let yValue = function(d) { return d.mentions};
   let yScale = d3.scale.linear().domain([1.2 * maxMentions, 0]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
-  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0)
-  .innerTickSize(-height)
-  .outerTickSize(0)
-  .tickPadding(10);
+  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(1);
 
   let radius = 3;
   let color = 0x000000;
@@ -271,10 +268,7 @@ function drawSentimentsGraph()
   let yValue = function(d) { return d.sentiments; };
   let yScale = d3.scale.linear().domain([maxSentiments * 1.2, minSentiments * 1.2]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
-  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(1)
-  .innerTickSize(-height)
-  .outerTickSize(0)
-  .tickPadding(10);
+  let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(1);
 
   let radius = 3;
   let color = 0x000000;
