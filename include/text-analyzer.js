@@ -1,6 +1,6 @@
 /**
- * Analyzes text to determine characteristics
- */
+* Analyzes text to determine characteristics
+*/
 
 exports.analyze = (text, callback) => {
 

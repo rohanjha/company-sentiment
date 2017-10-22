@@ -1,26 +1,32 @@
+"use strict";
 /*
- * File responsible for querying APIs to accumulate mentions
- */
+* File responsible for querying APIs to accumulate mentions
+*/
+const utils = require("./utils.js");
 const companyResource = require("./resource/company-resource.js");
 const mentionResource = require("./resource/mention-resource.js");
 const textAnalyzer = require("./text-analyzer.js");
 
-const apis = [
-  require("./mention-sources/twitter.js"),
-  // require("mention-sources/bloomberg.js")
+const mentionSources = [
+    require("./mention-sources/twitter.js"),
+    // require("mention-sources/bloomberg.js")
 ]
 
-exports.start = () => {
-  // TODO:  run "run" periodically
+let runTimeout = null;
+
+exports.start = (interval) => {
+    runTimeout = setInterval(run, interval);
 }
 
 function run() {
-  /**
-   * Query APIs and get back data
-   */
-   for (let api in apis) {
-     api.fetchMentions(mentionResource.addMention,
-                       textAnalyzer.analyze,
-                       companyResource.getCompanyId);
-   }
-}
+    /**
+    * Query APIs and get back data
+    */
+    utils.logInfo("fetching mentions...");
+
+    for (let i = 0; i < mentionSources; i++) {
+        mentionSources[i].fetchMentions(mentionResource.addMention,
+            textAnalyzer.analyze,
+            companyResource.getCompanyId);
+        }
+    }

@@ -1,46 +1,73 @@
-h1
-{
-  font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-image: url("https://newevolutiondesigns.com/images/freebies/city-wallpaper-47.jpg");
+}
+
+h1 {
   font-size: 92px;
-  padding: 80px 50px;
+  padding: 80px;
   text-align: center;
   text-transform: uppercase;
   text-rendering: optimizeLegibility;
   color: #ffffff;
 }
+
 .field {
   display:flex;
   position:relative;
   margin:5em auto;
   width:70%;
   flex-direction:row;
-  box-shadow:
-   1px 1px 0 rgb(22, 160, 133),
-   2px 2px 0 rgb(22, 160, 133),
-   3px 3px 0 rgb(22, 160, 133),
-   4px 4px 0 rgb(22, 160, 133),
-   5px 5px 0 rgb(22, 160, 133),
-   6px 6px 0 rgb(22, 160, 133),
-   7px 7px 0 rgb(22, 160, 133)
-  ;
+  border-radius: 1em;
 }
 
 .field>input[type=text],
 .field>button {
   display:block;
-  font-size:1em;
-  font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
+  font-size: 1em;
 }
 
 .field>input[type=text] {
-  flex:1;
-  padding:0.6em;
-  border:0.2em solid rgb(26, 188, 156);
+  flex: 1;
+  padding: 0.6em;
+  border: 0.2em solid rgb(26, 188, 156);
 }
 
 .field>button {
-  padding:0.6em 0.8em;
-  background-color:rgb(26, 188, 156);
-  color:white;
-  border:none;
+  padding: 0.6em 0.8em;
+  background-color: rgb(26, 188, 156);
+  color: white;
+  border: none;
+}
+
+#searchform {
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#mentions-container, #sentiments-container {
+  width: 60%;
+  margin: 0 auto; /* Added */
+  float: none; /* Added */
+  border: 0.2em solid rgb(26, 188, 156);
+}
+
+svg
+{
+  stroke-width: 3px;
+}
+
+#mentions-graph {
+  padding-top: 20px;
+}
+
+.xAxis path, .yAxis path
+{
+  stroke: #474747;
+  fill: none;
+}
+
+path.plot {
+  stroke: #FFA319;
 }
