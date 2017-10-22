@@ -1,6 +1,9 @@
 body {
   font-family: 'Open Sans', sans-serif;
-  background-image: url("https://newevolutiondesigns.com/images/freebies/city-wallpaper-47.jpg");
+  /* background-image: url("https://newevolutiondesigns.com/images/freebies/city-wallpaper-47.jpg"); */
+  background: #11998e;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #38ef7d, #11998e);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #38ef7d, #11998e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 h1 {
@@ -30,12 +33,12 @@ h1 {
 .field>input[type=text] {
   flex: 1;
   padding: 0.6em;
-  border: 0.2em solid rgb(26, 188, 156);
+  border: 0.2em solid #2F4F4F;
 }
 
 .field>button {
   padding: 0.6em 0.8em;
-  background-color: rgb(26, 188, 156);
+  background-color: #2F4F4F;
   color: white;
   border: none;
 }
@@ -44,13 +47,18 @@ h1 {
   margin: auto;
   margin-top: 10px;
   margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+#searchterm {
+  margin-right: 5px;
 }
 
 #mentions-container, #sentiments-container {
   width: 60%;
   margin: 0 auto; /* Added */
   float: none; /* Added */
-  border: 0.2em solid rgb(26, 188, 156);
+  border: 0.2em solid #2F4F4F;
   font-size: 85%;
 }
 
