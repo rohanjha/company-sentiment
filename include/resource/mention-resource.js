@@ -6,11 +6,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const mentionScheme = new Schema({
-    company_id    : String,
-    source        : String,
-    url           : String,
-    sentiment     : Number,
-    timestamp     : Date
+    company_id      : String,
+    source          : String,
+    url             : String,
+    sentiment_mag   : Number,
+    sentiment_score : Number,
+    timestamp       : Date
 });
 
 const Mention = mongoose.model("Mention", mentionScheme);

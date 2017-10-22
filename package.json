@@ -18,6 +18,7 @@
     "cors": "^2.8.4",
     "express": "^4.15.3",
     "express-resource": "^1.0.0",
+    "googleapis": "^22.2.0",
     "mongodb": "^2.2.28",
     "mongoose": "^4.10.5"
   }
