@@ -13,12 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
     "@google-cloud/language": "^1.0.0",
-=======
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
->>>>>>> ecb06c382aa3bad7bf604a7c5fb356ff7d1811ee
     "express": "^4.15.3",
     "express-resource": "^1.0.0",
     "mongodb": "^2.2.28",
