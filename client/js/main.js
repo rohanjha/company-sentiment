@@ -38,11 +38,15 @@ function initialize() {
   getListCompanies();
   drawMentionsGraph();
   drawSentimentsGraph();
+  $("#mentions-container").hide();
+  $("#sentiments-container").hide();
 }
 
 function searchClicked() {
   console.log("clicked search");
   $("h1").hide();
+  $("#mentions-container").show();
+  $("#sentiments-container").show();
   hasCompany();
 }
 
