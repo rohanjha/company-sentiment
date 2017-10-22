@@ -161,7 +161,7 @@ function drawMentionsGraph() {
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
-  let radius = 4;
+  let radius = 3;
   let color = 0x000000;
 
   let line = d3.svg.line()
@@ -249,7 +249,7 @@ function drawSentimentsGraph()
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
-  let radius = 4;
+  let radius = 3;
   let color = 0x000000;
 
   // Define the line
@@ -286,10 +286,4 @@ function drawSentimentsGraph()
   svg.append("path")
      .attr("class", "line")
      .attr("d", valueline(totalSentimentsByDay));
-}
-
-// gridlines in x axis function
-function make_x_gridlines() {
-    return d3.axisBottom(x)
-        .ticks(5)
 }

@@ -51,6 +51,7 @@ h1 {
   margin: 0 auto; /* Added */
   float: none; /* Added */
   border: 0.2em solid rgb(26, 188, 156);
+  font-size: 85%;
 }
 
 #sentiments-container {
@@ -64,14 +65,20 @@ h1 {
     shape-rendering: crispEdges;
 }
 
+.axis {
+    fill: solid;
+    stroke: black;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
 
 svg
 {
   stroke-width: 3px;
 }
 
-#mentions-graph {
-  padding-top: 20px;
+#mentions-graph, #sentiments-container {
+  padding-top: 15px;
 }
 
 .xAxis path, .yAxis path
