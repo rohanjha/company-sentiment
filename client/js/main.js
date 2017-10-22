@@ -123,6 +123,7 @@ function getStatsByDay()
 ///
 
 function drawMentionsGraph() {
+  svg.html("");
   // grab the svg
   let svg = d3.select("#mentions-graph");
 
@@ -217,6 +218,8 @@ function drawMentionsGraph() {
 
 function drawSentimentsGraph()
 {
+  svg.html("");
+
   // grab the svg
   let svg = d3.select("#sentiments-graph");
 
