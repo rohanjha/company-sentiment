@@ -2,7 +2,6 @@
 
 const utils = require("../utils.js");
 const mongoose = require('mongoose');
-// const ISODate = require('mongodb/ISODate');
 
 const Schema = mongoose.Schema;
 
@@ -47,25 +46,27 @@ exports.index = (req, res) => {
 
     // route for searching by any attribute
     } else if (req.query != undefined) {
-        let query = req.query;
+        let query = req.query; //new mongoose.Query();
 
         // create date query if requested
         if (query.start_date != undefined) {
-            let startDate = new Date(req.query.start_date);
+            let startDate = new Date(query.start_date);
+            delete query.start_date; // remove so doesn't limit results
 
             // end date is now if not specified
-            let endDate = new Date();
-            if (query.end_date != undefined) {
-                endDate = new Date(query.end_date);
-            }
+            // let endDate = new Date();
+            // if (req.query.end_date != undefined) {
+            //     endDate = new Date(req.query.end_date);
+            //     delete req.query.end_date; // remove so doesn't limit results
+            // }
 
-            query.date = { $gte: startDate, $lt: endDate };
-            console.log(query.date);
+            query["timestamp"] = { $gte: startDate }; // reversed for some reason .gte(new Date())
         }
+        // query.find(req.query);
+        console.log(query);
 
         Mention.find(query, (err, results) => {
             utils.handleError(err, res);
-            console.log(results);
             res.send(results);
         });
 
@@ -73,7 +74,6 @@ exports.index = (req, res) => {
     } else {
         Mention.find((err, mentions) => {
             utils.handleError(err, res);
-            console.log(mentions);
             res.send(mentions);
         });
     }
