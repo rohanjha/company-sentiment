@@ -26,10 +26,18 @@ exports.addMention = (mention, err_cb) => {
     newMention.save((err, mention) => {
         if (err) {
             utils.logError("error saving mention", {"err": err, "mention": mention});
-            err_cb(err);
+            if (err_cb) err_cb(err);
         } else {
             utils.logInfo("new mention added:", mention);
         }
+    });
+}
+
+exports.getMentions = (callback, query) => {
+    if (query == null) query = {}
+    Mention.find(query, (err, results) => {
+        if (err) utils.logError("error in searching for mentions", err);
+        callback(results);
     });
 }
 
