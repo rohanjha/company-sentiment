@@ -1,39 +1,36 @@
 /**
 * Analyzes text to determine characteristics
 */
+const utils = require("./utils.js");
 
-exports.analyze = (text, callback) => {
-
-  // TODO: process text
-  // Imports the Google Cloud client library
+// Imports the Google Cloud client library
 const language = require('@google-cloud/language');
 
 // Instantiates a client
-const client = new language.LanguageServiceClient();
+const client = new language.LanguageServiceClient({
+    "keyFilename": "./google-credentials.json"
+});
 
-// The text to analyze
-//const text = 'Hello, world!';
+exports.analyze = (text, callback) => {
 
-const document = {
-  content: text,
-  type: 'PLAIN_TEXT',
-};
+    const document = {
+        content: text,
+        type: 'PLAIN_TEXT',
+    };
 
-// Detects the sentiment of the text
-client
-  .analyzeSentiment({document: document})
-  .then(results => {
-    const sentiment = results[0].documentSentiment;
+    // Detects the sentiment of the text
+    client
+    .analyzeSentiment({document: document})
+    .then(results => {
+        const sentiment = results[0].documentSentiment;
 
-  //  console.log(`Text: ${text}`);
-  //  console.log(`Sentiment score: ${sentiment.score}`);
-  //  console.log(`Sentiment magnitude: ${sentiment.magnitude}`);
-  })
-  .catch(err => {
-    console.error('ERROR:', err);
-  });
-
-  callback({
-    "sentiment" : sentiment.score, sentiment.magnitude
-  });
+        callback({
+            "sentiment_score" : sentiment.score,
+            "sentiment_mag" : sentiment.magnitude
+        });
+    })
+    .catch(err => {
+        utils.logError("google text analyze:", err);
+        callback(null);
+    });
 }
