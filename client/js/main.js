@@ -165,7 +165,7 @@ function drawMentionsGraph() {
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
-  let radius = 4;
+  let radius = 3;
   let color = 0x000000;
 
   var valueline = d3.svg.line()
@@ -188,7 +188,14 @@ function drawMentionsGraph() {
   svg.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(" + (margins.left - buffer) + ", 0)")
-      .call(yAxis);
+      .call(yAxis)
+    .append("text")
+     .attr("class", "label")
+     .attr("transform", "rotate(-90)")
+     .attr("x", -175)
+     .attr("y", -42)
+     .style("text-anchor", "end")
+     .text("No. of Mentions");
 
   // Draw the data
   svg.selectAll(".dot").data(totalMentionsByDay)
@@ -273,7 +280,14 @@ function drawSentimentsGraph()
   svg.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(" + (margins.left - buffer) + ", 0)")
-      .call(yAxis);
+      .call(yAxis)
+    .append("text")
+     .attr("class", "label")
+     .attr("transform", "rotate(-90)")
+     .attr("x", -185)
+     .attr("y", -52)
+     .style("text-anchor", "end")
+     .text("Sentiment");
 
   // Draw the data
   svg.selectAll(".dot").data(totalSentimentsByDay).enter().append("circle")
