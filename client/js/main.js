@@ -2,25 +2,25 @@ let numberDays = 7;
 
 let fake_return_json =
   [{date: new Date(2017, 10, 20), sentiment: -0.3},
-   {date: new Date(2017, 10, 15), sentiment: 0},
+   {date: new Date(2017, 10, 17), sentiment: 0},
    {date: new Date(2017, 10, 17), sentiment: 0.4},
    {date: new Date(2017, 10, 18), sentiment: 0.8},
    {date: new Date(2017, 10, 19), sentiment: -0.5},
    {date: new Date(2017, 10, 19), sentiment: 1},
-   {date: new Date(2017, 10, 16), sentiment: 0.6},
+   {date: new Date(2017, 10, 18), sentiment: 0.6},
    {date: new Date(2017, 10, 17), sentiment: 0.2},
    {date: new Date(2017, 10, 19), sentiment: 0},
    {date: new Date(2017, 10, 21), sentiment: -0.6},
    {date: new Date(2017, 10, 20), sentiment: -0.4},
-   {date: new Date(2017, 10, 16), sentiment: 0.2},
+   {date: new Date(2017, 10, 19), sentiment: 0.2},
    {date: new Date(2017, 10, 21), sentiment: 0.8},
-   {date: new Date(2017, 10, 16), sentiment: 0.6},
+   {date: new Date(2017, 10, 19), sentiment: 0.6},
    {date: new Date(2017, 10, 17), sentiment: 0.9},
    {date: new Date(2017, 10, 17), sentiment: -0.1},
    {date: new Date(2017, 10, 17), sentiment: -1},
-   {date: new Date(2017, 10, 16), sentiment: -0.4},
-   {date: new Date(2017, 10, 15), sentiment: -0.6},
-   {date: new Date(2017, 10, 16), sentiment: 0.8},
+   {date: new Date(2017, 10, 17), sentiment: -0.4},
+   {date: new Date(2017, 10, 19), sentiment: -0.6},
+   {date: new Date(2017, 10, 17), sentiment: 0.8},
    {date: new Date(2017, 10, 17), sentiment: 1},
    {date: new Date(2017, 10, 19), sentiment: -0.2},
    {date: new Date(2017, 10, 21), sentiment: 0.6},
@@ -103,12 +103,12 @@ function getStatsByDay()
 
   for (var j = 0; j < fake_return_json.length; j++)
   {
-    mention[fake_return_json[j].daysAgo].mentions++;
+    mention[(new Date()).getDate()-fake_return_json[j].date.getDate()].mentions++;
   }
 
   for (var j = 0; j < fake_return_json.length; j++)
   {
-    mention[fake_return_json[j].daysAgo].sentiments += fake_return_json[j].sentiment / mention[fake_return_json[j].daysAgo].mentions;
+    mention[(new Date()).getDate()-fake_return_json[j].date.getDate()].sentiments += fake_return_json[j].sentiment / mention[(new Date()).getDate()-fake_return_json[j].date.getDate()].mentions;
   }
 
   return mention;
