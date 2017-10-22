@@ -1,7 +1,7 @@
 let numberDays = 7;
 
 let fake_return_json =
-  [{date: new Date(2017, 10, 20), sentiment: -0.3},
+  [{date: new Date(2017, 10, 20), sentiment: -3},
    {date: new Date(2017, 10, 17), sentiment: 0},
    {date: new Date(2017, 10, 17), sentiment: 0.4},
    {date: new Date(2017, 10, 18), sentiment: 0.8},
@@ -161,7 +161,7 @@ function drawMentionsGraph() {
 
   // set-up y-axis and y-values
   let yValue = function(d) { return d.mentions};
-  let yScale = d3.scale.linear().domain([maxMentions, 0]).range([margins.top, height - margins.bottom]);
+  let yScale = d3.scale.linear().domain([1.2 * maxMentions, 0]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
@@ -240,6 +240,7 @@ function drawSentimentsGraph()
   let minSentiments = 0;
   console.log(totalSentimentsByDay);
   for (let i = 0; i < totalSentimentsByDay.length; i++)  {
+    console.log(totalSentimentsByDay[i].sentiments);
     minSentiments = Math.min(minSentiments, totalSentimentsByDay[i].sentiments);
     maxSentiments = Math.max(maxSentiments, totalSentimentsByDay[i].sentiments);
   }
@@ -250,9 +251,12 @@ function drawSentimentsGraph()
   let xMap = function(d) { return xScale(xValue(d));};
   let xAxis = d3.svg.axis().scale(xScale).orient("bottom").outerTickSize(0).tickFormat(d3.format("d"));
 
+  console.log(minSentiments);
+  console.log(maxSentiments);
+
   // set-up y-axis and y-values
   let yValue = function(d) { return d.sentiments; };
-  let yScale = d3.scale.linear().domain([minSentiments, maxSentiments]).range([margins.top, height - margins.bottom]);
+  let yScale = d3.scale.linear().domain([maxSentiments * 1.2, minSentiments * 1.2]).range([margins.top, height - margins.bottom]);
   let yMap = function(d) {return yScale(yValue(d))};
   let yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
 
